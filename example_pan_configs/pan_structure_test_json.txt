@@ -1,0 +1,25 @@
+{
+  "NetDef": {
+      "NetID(str)": {
+          "NetFramework": "ClassName(str)",
+          "NetInterface": "ClassName(str)",
+          "NetArgs": {
+            "ParamName(str)" : "ArgumentValue(str)"
+          }
+      }, ...
+  }
+}
+OR
+[
+ {
+   "NetDef": {
+      "NetID(str)": {
+          "NetFramework": "ClassName(str)",
+          "NetInterface": "ClassName(str)",
+          "NetArgs": {
+            "ParamName(str)" : "ArgumentValue(str)"
+          }
+      }, ...
+    }
+ }, ...
+]

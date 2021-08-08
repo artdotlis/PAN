@@ -1,0 +1,43 @@
+[
+{
+  "NetDef": {
+    "NetID(str)": {
+      "NetFramework": "ClassName(str)",
+      "NetInterface": "ClassName(str)",
+      "NetArgs": {
+        "ParamName(str)" : "ArgumentValue(str)"
+      }
+    }, ...
+  },
+  "Root": {
+        "NetID": "NetID(str)",
+        "Children": [
+            {
+                "NetID": "NetID(str)",
+                "Children": [ ... ]
+            }, ...
+        ]
+    }
+}, ...
+]
+OR
+{
+  "NetDef": {
+    "NetID(str)": {
+      "NetFramework": "ClassName(str)",
+      "NetInterface": "ClassName(str)",
+      "NetArgs": {
+        "ParamName(str)" : "ArgumentValue(str)"
+      }
+    }, ...
+  },
+  "Root": {
+        "NetID": "NetID(str)",
+        "Children": [
+            {
+                "NetID": "NetID(str)",
+                "Children": [ ... ]
+            }, ...
+        ]
+    }
+}
