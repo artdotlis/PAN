@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 from typing import Dict, Type, Callable, Union, Tuple, Final, final
 from pathlib import Path
-import os
 
 from pan.public.interfaces.net_plotter_interface import NetXYPlotter
 from pan.public.constants.train_net_stats_constants import \
@@ -23,7 +22,7 @@ from rewowr.public.interfaces.container_interface import ContainerInterface
 from rewowr.public.interfaces.re_wr_interface import ReWrInterface
 
 _DictNetStats: Final = Dict[str, Dict[str, TrainNNPlotterStatDictSeriesType]]
-_DUMP_FOLDER_NAME: Final[str] = f"{os.sep}dump_out"
+_DUMP_FOLDER_NAME: Final[str] = "dump_out"
 
 
 def _check_if_complete(data_series: Dict[str, TrainNNPlotterStatDictSeriesType], /) -> bool:
@@ -101,7 +100,7 @@ def _add_to_data(data: Tuple[ContainerInterface, ...], working_path: Path,
     if dump:
         for key_index, plot_elem in net_stats_dict.items():
             net_xy_plotter_dump(
-                plot_elem, key_index, Path(str(working_path) + _DUMP_FOLDER_NAME), plotter
+                plot_elem, key_index, working_path.joinpath(_DUMP_FOLDER_NAME), plotter
             )
 
 
@@ -172,7 +171,7 @@ class WriterNetTrainTest(ReWrInterface):
                 f"Not all data was savable: {len(self.__net_stats_dict)}\n{self.__net_stats_dict}"
             )
         if not self.__keep_dump:
-            remove_dir_rec(str(self.__working_path) + _DUMP_FOLDER_NAME)
+            remove_dir_rec(str(self.__working_path.joinpath(_DUMP_FOLDER_NAME)))
 
     def on_error(self) -> None:
         if not self.__keep_dump:

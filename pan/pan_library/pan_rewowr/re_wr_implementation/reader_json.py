@@ -30,14 +30,14 @@ from rewowr.public.container.container_no_connection import NoConnectionContaine
 from rewowr.public.interfaces.re_wr_interface import ReWrInterface
 
 
-def _check_lock(file_dir: str, /) -> bool:
-    locks = list(Path(file_dir).glob("*.lock"))
+def _check_lock(file_dir: Path, /) -> bool:
+    locks = list(file_dir.glob("*.lock"))
     if not locks:
         pid = current_process().pid
         if isinstance(pid, int):
-            lock_name = Path(f"{file_dir}{os.sep}{pid}.lock")
+            lock_name = file_dir.joinpath(f"{pid}.lock")
             lock_name.touch()
-            all_locks = list(Path(file_dir).glob("*.lock"))
+            all_locks = list(file_dir.glob("*.lock"))
             if len(all_locks) > 1:
                 lock_name.unlink()
                 time.sleep(random.random())
@@ -87,11 +87,11 @@ def _read_method(process_lock: synchronize.RLock, running: CustomProcessValueWra
                 receivable = running.value
         if receivable >= 0:
             cont = _ReadMethodCon(
-                file_dir=f"{str(directory_in[0])}{os.sep}{directory_in[1][receivable]}",
+                file_dir=str(directory_in[0].joinpath(directory_in[1][receivable])),
                 erg_list=[],
                 json_containers=[]
             )
-            if _check_lock(cont.file_dir):
+            if _check_lock(Path(cont.file_dir)):
                 for file_name in Path(cont.file_dir).glob(CONF_NAME_REGEX):
                     json_file = check_absolute_path(str(file_name.absolute()))
                     dir_fi_path = get_file_path_pattern().search(str(json_file))
@@ -136,7 +136,7 @@ def _rm_files_rec(dir_name: Path, /) -> None:
         Path(file).unlink()
     try:
         for next_dir in next(os.walk(str(dir_name)))[1]:
-            _rm_files_rec(Path(f"{dir_name}{os.sep}{next_dir}"))
+            _rm_files_rec(dir_name.joinpath(next_dir))
     except StopIteration:
         pass
 
@@ -163,12 +163,12 @@ class ReaderJson(ReWrInterface):
         self.__directory_in: Tuple[Path, List[str]] = (
             directory_in, next(os.walk(str(directory_in)))[1]
         )
-        json_lock_dir = Path(f"{directory_in}{os.sep}json_file_locks")
+        json_lock_dir: Path = directory_in.joinpath("json_file_locks")
         create_dirs_rec(json_lock_dir)
         dir_locks = list(json_lock_dir.glob("*.lock"))
         self.__json_glob_lock = (
             json_lock_dir,
-            Path(f"{str(json_lock_dir)}{os.sep}{len(dir_locks) + 1}.lock")
+            json_lock_dir.joinpath(f"{len(dir_locks) + 1}.lock")
         )
         self.__json_glob_lock[1].touch()
         self.__process_lock = ctx.RLock()

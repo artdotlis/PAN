@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """.. moduleauthor:: Artur Lissin"""
-import os
 from pathlib import Path
 from typing import Dict, Tuple
 
@@ -50,13 +49,12 @@ def _check_data_info(data: Dict[str, TrainNNPlotterStatDictSeriesType], /) \
 def net_xy_plotter(data: Dict[str, TrainNNPlotterStatDictSeriesType],
                    id_file: ANNTreeIdType, working_path: Path,
                    hyper_params: str, plotter: NetXYPlotter, /) -> None:
-    dir_name = f"{str(working_path)}{os.sep}{id_file.file_name}{os.sep}"
-    dir_name += f"{os.sep.join(id_file.id_list)}"
-    create_dirs_rec(Path(dir_name))
+    dir_name: Path = working_path.joinpath(id_file.file_name, *id_file.id_list)
+    create_dirs_rec(dir_name)
     name = id_file.id_merged_str
     if len(name) > 100:
         name = ann_tree_id_short_file_name(name)
-    file_name = f"{dir_name}{os.sep}{name}"
+    file_name = str(dir_name.joinpath(name))
     plot_dict, write_dict = _check_data_info(data)
     plottable_data = plotter.create_plottable_data(_filter_data(data, plot_dict))
     writable_data = plotter.create_writable_data(_filter_data(data, write_dict))
@@ -70,7 +68,7 @@ def net_xy_plotter_dump(data: Dict[str, TrainNNPlotterStatDictSeriesType], file_
     if len(name) > 100:
         name = ann_tree_id_short_file_name(name)
     create_dirs_rec(Path(dump_folder))
-    file_name = f"{dump_folder}{os.sep}{name}"
+    file_name = str(dump_folder.joinpath(name))
     plot_dict, write_dict = _check_data_info(data)
     pl_data = plotter.create_plottable_dump_data(_filter_data(data, plot_dict))
     wr_data = plotter.create_writable_dump_data(_filter_data(data, write_dict))

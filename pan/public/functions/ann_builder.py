@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 """.. moduleauthor:: Artur Lissin"""
-import os
-
 from pathlib import Path
 from typing import Dict
 
@@ -23,7 +21,7 @@ def ann_builder(config_container: ConfigContainer,
     try:
         check_rewowr_container_config(config_container)
 
-        directory_log = check_dir_path(f"{str(directory_logs)}{os.sep}log")
+        directory_log = check_dir_path(str(directory_logs.joinpath("log")))
         create_dirs_rec(directory_log)
 
         _ = list(factory_worker(
